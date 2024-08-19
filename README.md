@@ -1,0 +1,2 @@
+### Hexlet tests and linter status:
+[![Actions Status](https://github.com/iPoolito/frontend-project-137/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/iPoolito/frontend-project-137/actions)
