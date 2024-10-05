@@ -4,36 +4,36 @@
 // Only in this case it can be imported into tests and tested (and reinitialized)
 // https://hexlet.io/courses/js-frontend-architecture/lessons/initialization/theory_unit
 
-import "bootstrap";
-import * as yup from "yup";
-import axios from "axios";
-import differenceWith from "lodash/differenceWith.js";
-import uniqueId from "lodash/uniqueId.js";
-import i18next from "i18next";
+import 'bootstrap';
+import * as yup from 'yup';
+import axios from 'axios';
+import differenceWith from 'lodash/differenceWith.js';
+import uniqueId from 'lodash/uniqueId.js';
+import i18next from 'i18next';
 
-import locale from "./locales/yupLocale.js";
-import resources from "./locales/index.js";
-import parse from "./rss.js";
+import locale from './locales/yupLocale.js';
+import resources from './locales/index.js';
+import parse from './rss.js';
 // Watchers separated
-import watch from "./watchers.js";
+import watch from './watchers.js';
 
 const fetchingTimeout = 5000;
 // Adding proxy in a separate function
 const addProxy = (url) => {
-  const urlWithProxy = new URL("/get", "https://allorigins.hexlet.app");
-  urlWithProxy.searchParams.set("url", url);
-  urlWithProxy.searchParams.set("disableCache", "true");
+  const urlWithProxy = new URL('/get', 'https://allorigins.hexlet.app');
+  urlWithProxy.searchParams.set('url', url);
+  urlWithProxy.searchParams.set('disableCache', 'true');
   return urlWithProxy.toString();
 };
 
 const getLoadingProcessErrorType = (e) => {
   if (e.isParsingError) {
-    return "noRss";
+    return 'noRss';
   }
   if (e.isAxiosError) {
-    return "network";
+    return 'network';
   }
-  return "unknown";
+  return 'unknown';
 };
 
 const fetchNewPosts = (watchedState) => {
@@ -49,7 +49,7 @@ const fetchNewPosts = (watchedState) => {
           channelId: feed.id,
         }));
         const oldPosts = watchedState.posts.filter(
-          (post) => post.channelId === feed.id
+          (post) => post.channelId === feed.id,
         );
         // We are finding differences, and the function catches this idea
         // There are numerous ways to evaluate the uniqueness
@@ -57,7 +57,7 @@ const fetchNewPosts = (watchedState) => {
         const posts = differenceWith(
           newPosts,
           oldPosts,
-          (p1, p2) => p1.title === p2.title
+          (p1, p2) => p1.title === p2.title,
         ).map((post) => ({ ...post, id: uniqueId() }));
         watchedState.posts.unshift(...posts);
       })
@@ -74,7 +74,7 @@ const fetchNewPosts = (watchedState) => {
 
 const loadRss = (watchedState, url) => {
   // Working with state one a single abstraction layer
-  watchedState.loadingProcess.status = "loading";
+  watchedState.loadingProcess.status = 'loading';
   const urlWithProxy = addProxy(url);
   return axios
     .get(urlWithProxy, { timeout: 10000 })
@@ -95,30 +95,30 @@ const loadRss = (watchedState, url) => {
       watchedState.feeds.unshift(feed);
 
       watchedState.loadingProcess.error = null;
-      watchedState.loadingProcess.status = "idle";
+      watchedState.loadingProcess.status = 'idle';
       watchedState.form = {
         ...watchedState.form,
-        status: "filling",
+        status: 'filling',
         error: null,
       };
     })
     .catch((e) => {
       console.log(e);
       watchedState.loadingProcess.error = getLoadingProcessErrorType(e);
-      watchedState.loadingProcess.status = "failed";
+      watchedState.loadingProcess.status = 'failed';
     });
 };
 
 export default () => {
   // Query elements inside function, not on a module level
   const elements = {
-    form: document.querySelector(".rss-form"),
-    input: document.querySelector(".rss-form input"),
-    feedback: document.querySelector(".feedback"),
+    form: document.querySelector('.rss-form'),
+    input: document.querySelector('.rss-form input'),
+    feedback: document.querySelector('.feedback'),
     submit: document.querySelector('.rss-form button[type="submit"]'),
-    feedsBox: document.querySelector(".feeds"),
-    postsBox: document.querySelector(".posts"),
-    modal: document.querySelector("#modal"),
+    feedsBox: document.querySelector('.feeds'),
+    postsBox: document.querySelector('.posts'),
+    modal: document.querySelector('#modal'),
   };
 
   // Two processess, two states
@@ -129,12 +129,12 @@ export default () => {
     feeds: [],
     posts: [],
     loadingProcess: {
-      status: "idle",
+      status: 'idle',
       error: null,
     },
     form: {
       error: null,
-      status: "filling",
+      status: 'filling',
       valid: false,
     },
     modal: {
@@ -152,7 +152,7 @@ export default () => {
 
   const promise = i18nextInstance
     .init({
-      lng: "en",
+      lng: 'en',
       debug: false,
       resources,
     })
@@ -173,11 +173,11 @@ export default () => {
       // The state is passed as a function parameter along with the i18next instance
       const watchedState = watch(elements, initState, i18nextInstance);
 
-      elements.form.addEventListener("submit", (e) => {
+      elements.form.addEventListener('submit', (e) => {
         e.preventDefault();
         // Getting form data via FormData
         const data = new FormData(e.target);
-        const url = data.get("url");
+        const url = data.get('url');
 
         validateUrl(url, watchedState.feeds).then((error) => {
           if (!error) {
@@ -197,8 +197,8 @@ export default () => {
         });
       });
 
-      elements.postsBox.addEventListener("click", (evt) => {
-        if (!("id" in evt.target.dataset)) {
+      elements.postsBox.addEventListener('click', (evt) => {
+        if (!('id' in evt.target.dataset)) {
           return;
         }
 

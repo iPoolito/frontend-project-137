@@ -1,3 +1,4 @@
+---
 root: true
 
 plugins:
@@ -12,9 +13,9 @@ env:
   es2020: true
 
 extends:
-  - 'airbnb-base'
-  - 'plugin:jest/recommended'
-  - 'plugin:testing-library/react'
+  - "airbnb-base"
+  - "plugin:jest/recommended"
+  - "plugin:testing-library/react"
   - "plugin:jest-dom/recommended"
 
 parserOptions:
